@@ -1,8 +1,21 @@
+using Microsoft.EntityFrameworkCore;
+using PrimeNumbersApp.Controllers;
+using PrimeNumbersApp.DAL;
+using PrimeNumbersApp.DAL.Interfaces.Repositories;
+using PrimeNumbersApp.DAL.Repositories;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
+
+builder.Services.AddDbContext<AppDbContext>(opts =>
+    opts.UseSqlServer(builder.Configuration.GetConnectionString("sqlConnection"), b =>
+        b.MigrationsAssembly("PrimeNumbersApp")));
+
+builder.Services.AddScoped<IPrimeNumberRepository, PrimeNumberRepository>();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
